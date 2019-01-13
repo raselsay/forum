@@ -10,6 +10,8 @@ class ReadThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected $thread;
+
     public function setUp()
     {
         parent::setUp();
@@ -56,5 +58,18 @@ class ReadThreadsTest extends TestCase
         $this->get('threads?by=AbedinRasel')
              ->assertSee($threadByRasel->title)
              ->assertDontSee($threadNotByRasel->title);
+    }
+
+    /** @test */
+    function a_user_can_filter_threads_by_popularity()
+    {
+        $threadsWithTwoRelies= create('App\Thread');
+        create('App\Reply',['thread_id'=>$threadsWithTwoRelies->id],2);
+        $threadsWithThreeReplies = create('App\Thread');
+        create('App\Reply',['thread_id'=>$threadsWithThreeReplies->id],3);
+        $threadsWithNoRelies = $this->thread;
+
+       $response = $this->getJson('threads?popular=1')->json();
+       $this->assertEquals([3,2,0],array_column($response,'replies_count'));
     }
 }
