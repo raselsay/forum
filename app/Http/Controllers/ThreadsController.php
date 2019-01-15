@@ -30,7 +30,7 @@ class ThreadsController extends Controller
      * @param Thread $thread
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show($channelId, Thread $thread)
+    public function show($channel, Thread $thread)
     {
         return view('threads.show',[
             'thread'=>$thread,
@@ -57,6 +57,12 @@ class ThreadsController extends Controller
             'body'=>request('body'),
         ]);
         return redirect($thread->path());
+    }
+
+    public function destroy($channel,Thread $thread)
+    {
+        $thread->delete();
+        return response([],204);
     }
 
     /**
