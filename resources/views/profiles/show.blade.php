@@ -17,7 +17,7 @@
                         <div class="lavel">
                         <span class="flex">
                             <a href="#">{{$thread->creator->name}}</a> posted:
-                            {{$thread->title}}
+                            <a href="{{ $thread->path() }}">{{$thread->title}}</a>
                         </span>
                             <span>
                             {{ $thread->created_at->diffForHumans() }}
