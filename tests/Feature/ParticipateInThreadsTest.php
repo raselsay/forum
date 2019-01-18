@@ -33,4 +33,28 @@ class ParticipateInThreadsTest extends TestCase
              ->assertSessionHasErrors('body');
 
     }
+
+    /** @test */
+    function unauthenticated_user_cannot_delete_replies()
+    {
+        $this->withExceptionHandling();
+        $reply = create('App\Reply');
+        $this->delete("replies/{$reply->id}")
+            ->assertRedirect('/login');
+
+        $this->signIn();
+        $this->delete("replies/{$reply->id}")
+             ->assertStatus(403);
+
+    }
+
+    /** @test */
+    function authenticated_users_can_delete_replies()
+    {
+        $this->signIn();
+        $reply = create('App\Reply',['user_id'=>auth()->id()]);
+        $this->delete("replies/{$reply->id}")
+            ->assertStatus(302);
+        $this->assertDatabaseMissing('replies',['id'=>$reply->id]);
+    }
 }

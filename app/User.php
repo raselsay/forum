@@ -36,4 +36,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Thread');
     }
+
+    public function activity()
+    {
+        return $this->hasMany('App\Activity');
+    }
 }

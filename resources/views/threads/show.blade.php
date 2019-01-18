@@ -37,7 +37,7 @@
                         <div class="form-group">
                             <textarea name="body" class="form-control" cols="30" rows="5" placeholder="Have something to say "></textarea>
                         </div>
-                        <button class="btn btn-default">Reply</button>
+                        <button class="btn btn-primary">Reply</button>
                     </form>
                 @else
                     <p class="text-center mt-3">Please <a href="{{route('login')}}">sign in</a> to participate in this discussion</p>

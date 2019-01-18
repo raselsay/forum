@@ -1,4 +1,4 @@
-<div class="card mt-2 mb-2">
+<div id="reply-{{ $reply->id }}" class="card mt-2 mb-2">
     <div class="card-header lavel">
         <h5 class="flex">
             <a href="{{ route('profile',$reply->owner->name) }}">
@@ -18,4 +18,13 @@
     <div class="card-body">
         {{$reply->body}}
     </div>
+    @can('update',$reply)
+    <div class="card-footer">
+        <form action="/replies/{{$reply->id}}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+    </div>
+    @endcan
 </div>
