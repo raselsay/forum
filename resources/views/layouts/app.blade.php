@@ -23,6 +23,12 @@
         .lavel{display: flex;align-items: center}
         .flex{flex: 1}
     </style>
+    <script>
+        window.App = {!! json_encode([
+            'user' => auth()->user(),
+            'signedIn'=>Auth::check()
+        ]) !!}
+    </script>
 </head>
 <body style="padding-bottom: 100px">
     <div id="app">

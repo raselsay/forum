@@ -12,6 +12,11 @@ window.Vue = require('vue');
 window.event = new Vue();
 window.flash = (message)=>{
     window.event.$emit('flash',message);
+};
+Vue.prototype.authorize = function(handler){
+    let user = window.App.user;
+    // return handler(window.App.user);
+    return user ? handler(user) : false;
 }
 
 /**
@@ -23,6 +28,8 @@ window.flash = (message)=>{
  */
 
 Vue.component('flash', require('./components/Flash.vue'));
+Vue.component('paginator', require('./components/Paginator.vue'));
+Vue.component('thread-view', require('./pages/Thread.vue'));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))

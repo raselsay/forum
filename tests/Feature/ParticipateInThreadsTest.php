@@ -20,7 +20,8 @@ class ParticipateInThreadsTest extends TestCase
         $thread = create('App\Thread');
         $reply = make('App\Reply');
         $this->post($thread->path() . '/replies', $reply->toArray());
-        $this->get($thread->path())->assertSee($reply->body);
+//        $this->get($thread->path())->assertSee($reply->body);
+        $this->assertDatabaseHas('replies',['body'=>$reply->body]);
     }
 
     /** @test */
@@ -53,8 +54,31 @@ class ParticipateInThreadsTest extends TestCase
     {
         $this->signIn();
         $reply = create('App\Reply',['user_id'=>auth()->id()]);
-        $this->delete("replies/{$reply->id}")
+        $this->delete("/replies/{$reply->id}")
             ->assertStatus(302);
         $this->assertDatabaseMissing('replies',['id'=>$reply->id]);
+    }
+    /** @test */
+    function unauthenticated_user_cannot_update_replies()
+    {
+        $this->withExceptionHandling();
+        $reply = create('App\Reply');
+        $this->patch("replies/{$reply->id}")
+            ->assertRedirect('/login');
+
+        $this->signIn();
+        $this->patch("replies/{$reply->id}")
+            ->assertStatus(403);
+
+    }
+
+    /** @test */
+    function authenticated_users_can_update_replies()
+    {
+        $this->signIn();
+        $reply = create('App\Reply',['user_id'=>auth()->id()]);
+        $updateReply = "Update Reply";
+        $this->patch("replies/{$reply->id}",['body'=>$updateReply]);
+        $this->assertDatabaseHas('replies',['id'=>$reply->id,'body'=>$updateReply]);
     }
 }
